@@ -1,0 +1,51 @@
+name: QA Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  automated-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [ui, api, database]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run ${{ matrix.suite }} tests
+        run: mvn --batch-mode --no-transfer-progress -Dgroups=${{ matrix.suite }} -Dheadless=true test
+
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.suite }}-test-evidence
+          path: target/surefire-reports
+          if-no-files-found: ignore
+
+  postman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Run Postman collection
+        run: npx --yes newman@6.2.1 run postman/JSONPlaceholder-QA-Portfolio.postman_collection.json -e postman/QA-Portfolio.postman_environment.json
