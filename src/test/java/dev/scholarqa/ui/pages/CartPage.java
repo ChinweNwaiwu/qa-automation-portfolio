@@ -3,6 +3,7 @@ package dev.scholarqa.ui.pages;
 import dev.scholarqa.ui.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
@@ -15,11 +16,14 @@ public class CartPage extends BasePage {
     }
 
     public CartPage waitUntilLoaded() {
-        visible(pageTitle);
+        wait.until(ExpectedConditions.urlContains("cart.html"));
+        wait.until(ExpectedConditions.textToBe(pageTitle, "Your Cart"));
         return this;
     }
 
     public List<String> itemNames() {
-        return driver.findElements(itemNames).stream().map(element -> element.getText()).toList();
+        return driver.findElements(itemNames).stream()
+                .map(element -> element.getText())
+                .toList();
     }
 }
