@@ -14,7 +14,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.11.4</junit.version>
-        <selenium.version>4.28.1</selenium.version>
+        <selenium.version>4.48.0</selenium.version>
         <restassured.version>5.5.0</restassured.version>
         <assertj.version>3.27.3</assertj.version>
         <jackson.version>2.18.2</jackson.version>
